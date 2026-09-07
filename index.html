@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GKPELE Ref — Reference Request</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080c16;
+  --surface: #111828;
+  --surface2: #1a2540;
+  --border: #243049;
+  --text: #f1f5fb;
+  --text2: #8899b4;
+  --gold: #f0b429;
+  --gold2: #d4960c;
+  --gold-bg: rgba(240,180,41,0.08);
+  --gold-border: rgba(240,180,41,0.25);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.08);
+  --red: #ef4444;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px 60px;
+}
+
+/* HEADER */
+.brand {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.brand-name {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.brand-name span {
+  color: var(--gold);
+}
+
+.brand-tagline {
+  font-size: 15px;
+  color: var(--text2);
+  margin-top: 8px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* FORM CARD */
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2), var(--gold));
+}
+
+.form-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* FIELDS */
+.field {
+  margin-bottom: 22px;
+}
+
+.field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.field-input,
+.field-select {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field-input::placeholder {
+  color: var(--text2);
+  font-weight: 400;
+}
+
+.field-input:focus,
+.field-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(240,180,41,0.12);
+}
+
+.field-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238899b4' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  padding-right: 40px;
+}
+
+.field-select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* TOGGLE BUTTONS */
+.toggle-row {
+  display: flex;
+  gap: 10px;
+}
+
+.toggle-btn {
+  flex: 1;
+  height: 52px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.toggle-btn.active {
+  background: var(--gold-bg);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(240,180,41,0.08);
+}
+
+/* PRICE DISPLAY */
+.price-card {
+  background: linear-gradient(135deg, #111828, #162033, #111828);
+  border: 2px solid var(--gold-border);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  margin: 28px 0;
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.price-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+}
+
+.price-amount {
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.price-note {
+  font-size: 13px;
+  color: var(--text2);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+.price-breakdown {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 6px 16px;
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+
+/* GET QUOTE BUTTON */
+.btn-quote {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #000;
+  font-size: 18px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+
+.btn-quote:hover {
+  box-shadow: 0 4px 24px rgba(240,180,41,0.35);
+  transform: translateY(-1px);
+}
+
+.btn-quote:active {
+  transform: translateY(0);
+}
+
+/* SUBMIT BUTTON */
+.btn-submit {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--green), #16a34a);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: none;
+  margin-top: 8px;
+}
+
+.btn-submit:hover {
+  box-shadow: 0 4px 24px rgba(34,197,94,0.3);
+  transform: translateY(-1px);
+}
+
+/* SUCCESS STATE */
+.success-card {
+  background: var(--green-bg);
+  border: 2px solid rgba(34,197,94,0.3);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+
+.success-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.success-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+
+.success-text {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.btn-reset {
+  margin-top: 20px;
+  padding: 12px 28px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text2);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-reset:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* PRICING TABLE */
+.pricing-info {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 32px;
+}
+
+.pricing-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pricing-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  text-align: center;
+}
+
+.pricing-years {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+  margin-bottom: 6px;
+}
+
+.pricing-cost {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+/* FOOTER */
+.footer {
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--text2);
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* ERROR */
+.field-error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 6px;
+  display: none;
+}
+
+@media (max-width: 480px) {
+  body { padding: 24px 14px 40px; }
+  .brand-name { font-size: 34px; }
+  .form-card { padding: 24px 20px; }
+  .price-amount { font-size: 44px; }
+}
+</style>
+</head>
+<body>
+
+<div class="brand">
+  <div class="brand-name">GKPELE <span>Ref</span></div>
+  <div class="brand-tagline">Professional Reference Services</div>
+</div>
+
+<div class="form-card" id="formCard">
+  <div class="form-title">Request a Reference</div>
+  <div class="form-subtitle">Fill in your details below and we'll provide an instant quote for your reference.</div>
+
+  <div class="field">
+    <label class="field-label">Full Name</label>
+    <input class="field-input" type="text" id="fullName" placeholder="Enter your full name">
+    <div class="field-error" id="nameError">Please enter your full name.</div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Do you have previous experience for the new role?</label>
+    <div class="toggle-row">
+      <button class="toggle-btn" id="expYes" onclick="setExp('yes')">Yes</button>
+      <button class="toggle-btn" id="expNo" onclick="setExp('no')">No</button>
+    </div>
+    <div class="field-error" id="expError">Please select an option.</div>
+  </div>
+
+  <div class="field">
+    <label class="field-label">Number of years of reference required</label>
+    <select class="field-select" id="yearsSelect">
+      <option value="">Select years</option>
+      <option value="1">1 Year</option>
+      <option value="2">2 Years</option>
+      <option value="3">3 Years</option>
+      <option value="4">4 Years</option>
+      <option value="5">5 Years</option>
+      <option value="6">6 Years</option>
+      <option value="7">7 Years</option>
+    </select>
+    <div class="field-error" id="yearsError">Please select the number of years.</div>
+  </div>
+
+  <button class="btn-quote" onclick="getQuote()">Get Your Quote</button>
+
+  <div class="price-card" id="priceCard">
+    <div class="price-label">Your Reference Cost</div>
+    <div class="price-amount" id="priceAmount">£250</div>
+    <div class="price-breakdown" id="priceBreakdown">1–4 years — Standard Rate</div>
+    <div class="price-note">This covers a comprehensive professional reference for the period selected.</div>
+  </div>
+
+  <button class="btn-submit" id="submitBtn" onclick="submitRequest()">Submit Reference Request</button>
+
+  <div class="success-card" id="successCard">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Request Submitted</div>
+    <div class="success-text">Thank you, <strong id="successName"></strong>. Your reference request has been received and we'll be in touch shortly.</div>
+    <button class="btn-reset" onclick="resetForm()">Submit Another Request</button>
+  </div>
+</div>
+
+<div class="pricing-info">
+  <div class="pricing-title">Reference Pricing</div>
+  <div class="pricing-grid">
+    <div class="pricing-item">
+      <div class="pricing-years">1 – 4 Years</div>
+      <div class="pricing-cost">£250</div>
+    </div>
+    <div class="pricing-item">
+      <div class="pricing-years">5 – 7 Years</div>
+      <div class="pricing-cost">£300</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">GKPELE Ref — Professional Reference Services</div>
+
+<script>
+let experience = null;
+
+function setExp(val) {
+  experience = val;
+  document.getElementById('expYes').className = 'toggle-btn' + (val === 'yes' ? ' active' : '');
+  document.getElementById('expNo').className = 'toggle-btn' + (val === 'no' ? ' active' : '');
+  document.getElementById('expError').style.display = 'none';
+}
+
+function getQuote() {
+  let valid = true;
+
+  const name = document.getElementById('fullName').value.trim();
+  const years = parseInt(document.getElementById('yearsSelect').value);
+
+  // Validate
+  if (!name) {
+    document.getElementById('nameError').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('nameError').style.display = 'none';
+  }
+
+  if (experience === null) {
+    document.getElementById('expError').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('expError').style.display = 'none';
+  }
+
+  if (!years) {
+    document.getElementById('yearsError').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('yearsError').style.display = 'none';
+  }
+
+  if (!valid) return;
+
+  // Calculate price
+  const price = years >= 5 ? 300 : 250;
+  const tier = years >= 5 ? '5–7 years — Extended Rate' : '1–4 years — Standard Rate';
+
+  document.getElementById('priceAmount').textContent = '£' + price;
+  document.getElementById('priceBreakdown').textContent = tier;
+
+  // Show price and submit button
+  document.getElementById('priceCard').style.display = 'block';
+  document.getElementById('submitBtn').style.display = 'block';
+
+  // Scroll to price
+  document.getElementById('priceCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function submitRequest() {
+  const name = document.getElementById('fullName').value.trim();
+
+  document.getElementById('successName').textContent = name;
+  document.getElementById('successCard').style.display = 'block';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('priceCard').style.display = 'none';
+
+  document.getElementById('successCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetForm() {
+  document.getElementById('fullName').value = '';
+  document.getElementById('yearsSelect').value = '';
+  experience = null;
+  document.getElementById('expYes').className = 'toggle-btn';
+  document.getElementById('expNo').className = 'toggle-btn';
+  document.getElementById('priceCard').style.display = 'none';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('successCard').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
