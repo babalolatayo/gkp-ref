@@ -424,6 +424,12 @@ body {
   </div>
 
   <div class="field">
+    <label class="field-label">Email Address</label>
+    <input class="field-input" type="email" id="emailAddr" placeholder="Enter your email address">
+    <div class="field-error" id="emailError">Please enter a valid email address.</div>
+  </div>
+
+  <div class="field">
     <label class="field-label">Do you have previous experience for the new role?</label>
     <div class="toggle-row">
       <button class="toggle-btn" id="expYes" onclick="setExp('yes')">Yes</button>
@@ -466,20 +472,6 @@ body {
   </div>
 </div>
 
-<div class="pricing-info">
-  <div class="pricing-title">Reference Pricing</div>
-  <div class="pricing-grid">
-    <div class="pricing-item">
-      <div class="pricing-years">1 – 4 Years</div>
-      <div class="pricing-cost">£250</div>
-    </div>
-    <div class="pricing-item">
-      <div class="pricing-years">5 – 7 Years</div>
-      <div class="pricing-cost">£300</div>
-    </div>
-  </div>
-</div>
-
 <div class="footer">GKPELE Ref — Professional Reference Services</div>
 
 <script>
@@ -496,7 +488,9 @@ function getQuote() {
   let valid = true;
 
   const name = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('emailAddr').value.trim();
   const years = parseInt(document.getElementById('yearsSelect').value);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Validate
   if (!name) {
@@ -504,6 +498,13 @@ function getQuote() {
     valid = false;
   } else {
     document.getElementById('nameError').style.display = 'none';
+  }
+
+  if (!email || !emailRegex.test(email)) {
+    document.getElementById('emailError').style.display = 'block';
+    valid = false;
+  } else {
+    document.getElementById('emailError').style.display = 'none';
   }
 
   if (experience === null) {
@@ -539,17 +540,43 @@ function getQuote() {
 
 function submitRequest() {
   const name = document.getElementById('fullName').value.trim();
+  const email = document.getElementById('emailAddr').value.trim();
+  const years = parseInt(document.getElementById('yearsSelect').value);
+  const cost = years >= 5 ? 300 : 250;
 
-  document.getElementById('successName').textContent = name;
-  document.getElementById('successCard').style.display = 'block';
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('priceCard').style.display = 'none';
+  document.getElementById('submitBtn').textContent = 'Submitting...';
+  document.getElementById('submitBtn').disabled = true;
 
-  document.getElementById('successCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  fetch('https://script.google.com/macros/s/AKfycbygE63qri2VNW1m-QNE4GSuo2EV3eXXPy7bEqkedq9qg1Yt8JXycsJQVcoJgKaJxxQd3A/exec', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      experience: experience,
+      years: years,
+      cost: cost
+    })
+  }).then(function() {
+    document.getElementById('successName').textContent = name;
+    document.getElementById('successCard').style.display = 'block';
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('priceCard').style.display = 'none';
+    document.getElementById('successCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }).catch(function() {
+    document.getElementById('successName').textContent = name;
+    document.getElementById('successCard').style.display = 'block';
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('priceCard').style.display = 'none';
+    document.getElementById('successCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }).finally(function() {
+    document.getElementById('submitBtn').textContent = 'Submit Reference Request';
+    document.getElementById('submitBtn').disabled = false;
+  });
 }
 
 function resetForm() {
   document.getElementById('fullName').value = '';
+  document.getElementById('emailAddr').value = '';
   document.getElementById('yearsSelect').value = '';
   experience = null;
   document.getElementById('expYes').className = 'toggle-btn';
